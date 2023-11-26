@@ -8,10 +8,16 @@ find_package(Qt6 6.4 REQUIRED COMPONENTS Quick)
 
 qt_standard_project_setup()
 
-qt_add_executable(appmedia-player
-    networkmanager.h
+set(SOURCES
     networkmanager.cpp
+    networkmanager.h
+    playerworker.cpp
+    playerworker.h
     main.cpp
+)
+
+qt_add_executable(appmedia-player
+    ${SOURCES}
 )
 
 qt_add_qml_module(appmedia-player

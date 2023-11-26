@@ -9,24 +9,28 @@ Window {
     visible: true
     title: qsTr("JetPlayer")
 
-    Button {
+    property string ipAddr: {"http://192.168.1.194:5005"}
+
+    /*Button {
         id: fetchDataBtn
         text: "Play"
         anchors.centerIn: parent
         onClicked: {
-            netManager.sendRequest("http://192.168.1.194:8080")
+            netManager.sendRequest(ipAddr)
         }
+    }*/
+
+    Network {
+        id: networkManager
+
     }
+
 
     Label {
         id: responseLabel
-        anchors.top: fetchDataBtn.bottom
+        anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        text: netManager.response
-    }
-
-    Network {
-        id: netManager
-
+        //text: netManager.response
+        text: "Server response:"
     }
 }

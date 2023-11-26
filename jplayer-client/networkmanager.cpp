@@ -3,7 +3,8 @@
 NetworkManager::NetworkManager(QObject *parent)
     : QObject{parent}, networkManager{new QNetworkAccessManager(this)}
 {
-    connect(networkManager, &QNetworkAccessManager::finished, this, &NetworkManager::networkReply);
+    //connect(networkManager, &QNetworkAccessManager::finished, this, &NetworkManager::networkReply);
+    qDebug() << __func__;
 }
 
 void NetworkManager::sendRequest(const QString &url)
@@ -30,3 +31,5 @@ void NetworkManager::networkReply(QNetworkReply *reply)
 
     reply->deleteLater();
 }
+
+
