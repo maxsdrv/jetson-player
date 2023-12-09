@@ -9,28 +9,31 @@ Window {
     visible: true
     title: qsTr("JetPlayer")
 
-    property string ipAddr: {"http://192.168.1.194:5005"}
+    property string ipAddr: {"http://localhost:5001"}
 
-    /*Button {
-        id: fetchDataBtn
-        text: "Play"
-        anchors.centerIn: parent
-        onClicked: {
-            netManager.sendRequest(ipAddr)
-        }
-    }*/
+    // Button {
+    //     id: fetchDataBtn
+    //     text: "Play"
+    //     anchors.centerIn: parent
+    //     onClicked: {
+    //         networkManager.sendRequest(ipAddr)
+    //     }
+    // }
 
     Network {
         id: networkManager
+        url: ipAddr
 
+        onResponseChanged: {
+            console.log("Response ...")
+        }
     }
-
 
     Label {
         id: responseLabel
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        //text: netManager.response
-        text: "Server response:"
+        text: networkManager.response
+        //text: "Server response:"
     }
 }

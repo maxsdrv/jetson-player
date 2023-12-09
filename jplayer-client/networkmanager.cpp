@@ -1,9 +1,19 @@
 #include "networkmanager.h"
+#include "playerworker.h"
 
 NetworkManager::NetworkManager(QObject *parent)
-    : QObject{parent}, networkManager{new QNetworkAccessManager(this)}
+    : QObject{parent}, networkManager{new QNetworkAccessManager(this)},
+      _playerWorker{new PlayerWorker(this)}
 {
-    //connect(networkManager, &QNetworkAccessManager::finished, this, &NetworkManager::networkReply);
+
+    qDebug() << __func__;
+    connect(this, &NetworkManager::urlChanged, _playerWorker, &PlayerWorker::checkConnection);
+    connect(_playerWorker, &PlayerWorker::connectionEstablished, this, &NetworkManager::serverIsAlive);
+    connect(_playerWorker, &PlayerWorker::connectionLost, this, &NetworkManager::serverIsDead);
+}
+
+NetworkManager::~NetworkManager()
+{
     qDebug() << __func__;
 }
 
@@ -18,18 +28,27 @@ QString NetworkManager::response() const
     return m_response;
 }
 
-void NetworkManager::networkReply(QNetworkReply *reply)
+void NetworkManager::setUrl(QString url)
 {
-    if (reply->error()) {
-        m_response = "Error: " + reply->errorString();
-    } else {
-        QByteArray response = reply->readAll();
-        m_response = "Server Response: " + QString(response);
+    if (_url != url && !url.isEmpty()) {
+        _url = url;
+        _playerWorker->setUrl(_url);
+        _playerWorker->setupTimers();
     }
+    qDebug() << __func__ << "url: " << url;
 
-    emit responseChanged();
-
-    reply->deleteLater();
+    emit urlChanged();
 }
+
+void NetworkManager::serverIsAlive() {
+    qDebug() << __func__;
+}
+
+void NetworkManager::serverIsDead()
+{
+    qDebug() << __func__;
+}
+
+
 
 
