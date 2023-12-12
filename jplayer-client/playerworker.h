@@ -10,20 +10,11 @@
 QT_BEGIN_NAMESPACE
 
 class QNetworkAccessManager;
-class QNetworkReply;
+class PlayerSender;
+class PlayerReceiver;
 class QTimer;
 
 QT_END_NAMESPACE
-
-struct HttpRequestData {
-    QString endpoint;
-    enum class RequestType {
-        GET,
-        POST
-    } requestType;
-    QJsonObject data;
-};
-
 
 class PlayerWorker : public QObject
 {
@@ -32,33 +23,38 @@ public:
     explicit PlayerWorker(QObject *parent = nullptr);
     ~PlayerWorker();
 
-    void enqueueRequest(const HttpRequestData& request);
     void setupTimers();
+    void connectionTimerStop();
     void setUrl(QString url);
 
 private:
     QNetworkAccessManager *_networkManager;
+    PlayerReceiver* _playerReceiver;
+    PlayerSender* _playerSender;
     QThread _thread;
     QMutex _queueMutex;
-    QMutex _processMutex;
-    QQueue<HttpRequestData> _requestQueue;
+    QQueue<PlayerSender*> _requestQueue;
     QString _serverUrl;
     QTimer* _connectionTimer;
 
-    void sendRequest(const HttpRequestData& requestData);
+    void sendRequest(PlayerSender* requestData);
+
+    void senderConnections();
+    void receiverConnecions();
 
 public slots:
     void checkConnection();
+    void play();
+    void stop();
 
 private slots:
-    void networkReply(QNetworkReply* reply);
-    void processQueue();
+    void processingErrors(QString error);
+    void processingResponses(QString response);
 
 signals:
-    void responseReceived(const QString& response);
-    void connectionEstablished();
-    void connectionLost();
-    void newRequestEnqueue();
+    void enqueueRequest(QString endpoint, const QByteArray &data);
+    void enqueueRequest(QString endpoint);
+    void urlUpdated(QString url);
 };
 
 #endif // PLAYERWORKER_H

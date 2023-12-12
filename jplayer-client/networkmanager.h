@@ -37,8 +37,8 @@ signals:
     void urlChanged();
 
 private slots:
-    void serverIsAlive();
-    void serverIsDead();
+    void proceedResponse(const QString& response);
+    void proceedErrors(const QString& error);
 
 private:
     QNetworkAccessManager* networkManager;

@@ -13,6 +13,12 @@ set(SOURCES
     networkmanager.h
     playerworker.cpp
     playerworker.h
+    runner.cpp
+    runner.h
+    playersender.h
+    playersender.cpp
+    playerreceiver.h
+    playerreceiver.cpp
     main.cpp
 )
 
@@ -24,6 +30,9 @@ qt_add_qml_module(appmedia-player
     URI media-player
     VERSION 1.0
     QML_FILES Main.qml
+    SOURCES
+    SOURCES
+    SOURCES
 )
 
 set_target_properties(appmedia-player PROPERTIES

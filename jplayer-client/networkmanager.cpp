@@ -7,9 +7,9 @@ NetworkManager::NetworkManager(QObject *parent)
 {
 
     qDebug() << __func__;
-    connect(this, &NetworkManager::urlChanged, _playerWorker, &PlayerWorker::checkConnection);
-    connect(_playerWorker, &PlayerWorker::connectionEstablished, this, &NetworkManager::serverIsAlive);
-    connect(_playerWorker, &PlayerWorker::connectionLost, this, &NetworkManager::serverIsDead);
+    connect(this, &NetworkManager::urlChanged, _playerWorker, &PlayerWorker::checkConnection, Qt::QueuedConnection);
+    //connect(_playerWorker, &PlayerWorker::responseReceived, this, &NetworkManager::proceedResponse, Qt::QueuedConnection);
+    //connect(_playerWorker, &PlayerWorker::badRequest, this, &NetworkManager::proceedErrors, Qt::QueuedConnection);
 }
 
 NetworkManager::~NetworkManager()
@@ -40,14 +40,17 @@ void NetworkManager::setUrl(QString url)
     emit urlChanged();
 }
 
-void NetworkManager::serverIsAlive() {
-    qDebug() << __func__;
+void NetworkManager::proceedResponse(const QString &response)
+{
+    qDebug() << "Response received: " << response;
 }
 
-void NetworkManager::serverIsDead()
+void NetworkManager::proceedErrors(const QString &error)
 {
-    qDebug() << __func__;
+    qDebug() << "Error occurred: " << error;
 }
+
+
 
 
 
