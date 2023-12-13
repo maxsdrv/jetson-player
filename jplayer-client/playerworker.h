@@ -30,6 +30,18 @@ public:
     void stop();
 
 private:
+    enum class MessageType {
+        HEARTBEAT,
+        PLAY,
+        STOP
+    };
+    QMap<MessageType, QString> messageTypes {
+        {MessageType::HEARTBEAT, "/heartbeat"},
+        {MessageType::PLAY, "/play"},
+        {MessageType::STOP, "/stop"}
+    };
+
+private:
     QNetworkAccessManager *_networkManager;
     PlayerReceiver* _playerReceiver;
     PlayerSender* _playerSender;
@@ -52,8 +64,8 @@ private slots:
     void processingResponses(QString response, QString message);
 
 signals:
-    void enqueueRequest(QString endpoint, const QByteArray &data);
-    void enqueueRequest(QString endpoint);
+    void enqueuePostRequest(QString endpoint, const QByteArray &data);
+    void enqueueGetRequest(QString endpoint);
     void urlUpdated(QString url);
 };
 

@@ -37,8 +37,8 @@ private:
     void sendRequest(const HttpRequestData& requestData);
 
 public slots:
-    void sendData(QString endpoint);
-    void sendData(QString endpoint, const QByteArray& data);
+    void prepareGetRequest(QString endpoint);
+    void preparePostRequest(QString endpoint, const QByteArray& data);
     void setUrl(QString url);
 
 signals:

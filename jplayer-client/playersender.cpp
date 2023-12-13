@@ -14,14 +14,14 @@ PlayerSender::~PlayerSender()
     qDebug() << __func__;
 }
 
-void PlayerSender::sendData(QString endpoint)
+void PlayerSender::prepareGetRequest(QString endpoint)
 {
     HttpRequestData request {endpoint, HttpRequestData::RequestType::GET, QByteArray{}};
 
     enqueueRequest(request);
 }
 
-void PlayerSender::sendData(QString endpoint, const QByteArray &data)
+void PlayerSender::preparePostRequest(QString endpoint, const QByteArray &data)
 {
     HttpRequestData request {endpoint, HttpRequestData::RequestType::POST, data};
 

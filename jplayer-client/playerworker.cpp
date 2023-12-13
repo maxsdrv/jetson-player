@@ -6,22 +6,8 @@
 #include <QNetworkAccessManager>
 
 #include "playerworker.h"
-#include "runner.h"
 #include "playerreceiver.h"
 #include "playersender.h"
-
-namespace {
-enum class MessageType {
-    HEARTBEAT,
-    PLAY,
-    STOP
-};
-QMap<MessageType, QString> messageTypes {
-    {MessageType::HEARTBEAT, "/heartbeat"},
-    {MessageType::PLAY, "/play"},
-    {MessageType::STOP, "/stop"}
-};
-}
 
 PlayerWorker::PlayerWorker(QObject *parent)
     : QObject{parent},
@@ -67,11 +53,9 @@ void PlayerWorker::setUrl(QString url)
 
 void PlayerWorker::senderConnections()
 {
-    connect(this, QOverload<QString, const QByteArray&>::of(&PlayerWorker::enqueueRequest),
-            _playerSender, QOverload<QString, const QByteArray&>::of(&PlayerSender::sendData));
+    connect(this, &PlayerWorker::enqueuePostRequest, _playerSender, &PlayerSender::preparePostRequest);
 
-    connect(this, QOverload<QString>::of(&PlayerWorker::enqueueRequest),
-            _playerSender, QOverload<QString>::of(&PlayerSender::sendData));
+    connect(this, &PlayerWorker::enqueueGetRequest, _playerSender, &PlayerSender::prepareGetRequest);
 
     connect(this, &PlayerWorker::urlUpdated, _playerSender, &PlayerSender::setUrl);
 
@@ -89,12 +73,12 @@ void PlayerWorker::checkConnection()
     /*QJsonObject data;
     Runner message{"heartbeat", data};
     QByteArray messageData = message.toByteArray();*/
-    emit enqueueRequest(messageTypes[MessageType::HEARTBEAT]);
+    emit enqueueGetRequest(messageTypes[MessageType::HEARTBEAT]);
 }
 
 void PlayerWorker::play()
 {
-    emit enqueueRequest(messageTypes[MessageType::PLAY]);
+    emit enqueueGetRequest(messageTypes[MessageType::PLAY]);
 }
 
 void PlayerWorker::stop()
