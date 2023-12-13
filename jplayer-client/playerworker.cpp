@@ -89,16 +89,12 @@ void PlayerWorker::checkConnection()
     /*QJsonObject data;
     Runner message{"heartbeat", data};
     QByteArray messageData = message.toByteArray();*/
-
-    //PlayerSender *request = new PlayerSender{ RequestType::GET, "/heartbeat", messageData, this};
-
-    //enqueueRequest(request);
     emit enqueueRequest(messageTypes[MessageType::HEARTBEAT]);
 }
 
 void PlayerWorker::play()
 {
-
+    emit enqueueRequest(messageTypes[MessageType::PLAY]);
 }
 
 void PlayerWorker::stop()
@@ -106,35 +102,15 @@ void PlayerWorker::stop()
 
 }
 
-//void PlayerWorker::networkReply(QNetworkReply* reply)
-//{
-    /*if (reply->error()) {
-
-        emit badRequest(reply->errorString());
-
-    } else {
-        QByteArray responseByte = reply->readAll();
-        auto message = Runner::fromByteArray(responseByte);
-
-        auto data = message.getData();
-        auto type = message.getType();
-
-        emit responseReceived(type);
-
-        //_connectionTimer->stop();
-    }
-
-    reply->deleteLater();*/
-//}
-
 void PlayerWorker::processingErrors(QString error)
 {
-    qDebug() << "Error: " << error << "\n";
+    qDebug() << "Error: " << error;
 }
 
-void PlayerWorker::processingResponses(QString response)
+void PlayerWorker::processingResponses(QString response, QString message)
 {
-    qDebug() << "Response: " << response << "\n";
+    qDebug() << "Response: " << response << " " << message;
+    connectionTimerStop();
 }
 
 

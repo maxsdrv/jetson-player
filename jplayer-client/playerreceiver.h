@@ -16,7 +16,7 @@ public slots:
 
 signals:
     void badRequest(QString error);
-    void responseReceived(QString response);
+    void responseReceived(QString response, QString message);
 };
 
 #endif // PLAYERRECEIVER_H

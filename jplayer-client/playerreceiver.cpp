@@ -26,7 +26,7 @@ void PlayerReceiver::networkReply(QNetworkReply *reply)
         auto data = message.getData();
         auto type = message.getType();
 
-        emit responseReceived(type);
+        emit responseReceived(type, data.value("message").toString());
     }
 
     reply->deleteLater();

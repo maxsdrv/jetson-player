@@ -26,6 +26,8 @@ public:
     void setupTimers();
     void connectionTimerStop();
     void setUrl(QString url);
+    void play();
+    void stop();
 
 private:
     QNetworkAccessManager *_networkManager;
@@ -44,12 +46,10 @@ private:
 
 public slots:
     void checkConnection();
-    void play();
-    void stop();
 
 private slots:
     void processingErrors(QString error);
-    void processingResponses(QString response);
+    void processingResponses(QString response, QString message);
 
 signals:
     void enqueueRequest(QString endpoint, const QByteArray &data);

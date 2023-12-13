@@ -23,6 +23,16 @@ void NetworkManager::sendRequest(const QString &url)
     networkManager->get(request);
 }
 
+void NetworkManager::play()
+{
+    _playerWorker->play();
+}
+
+void NetworkManager::stop()
+{
+    _playerWorker->stop();
+}
+
 QString NetworkManager::response() const
 {
     return m_response;

@@ -23,6 +23,8 @@ public:
     ~NetworkManager();
 
     Q_INVOKABLE void sendRequest(const QString& url);
+    Q_INVOKABLE void play();
+    Q_INVOKABLE void stop();
 
     QString response() const;
 

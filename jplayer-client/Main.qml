@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Window
 import QtQuick.Controls 2.15
+import QtMultimedia
+
 import network_manager 1.0
 
 Window {
@@ -11,14 +13,36 @@ Window {
 
     property string ipAddr: {"http://localhost:5001"}
 
-    // Button {
-    //     id: fetchDataBtn
-    //     text: "Play"
-    //     anchors.centerIn: parent
-    //     onClicked: {
-    //         networkManager.sendRequest(ipAddr)
-    //     }
-    // }
+    MediaPlayer {
+        id: mediaPlayer
+        source: "rtp://localhost:5000"
+    }
+
+    VideoOutput {
+        id: videoOutput
+        anchors.fill: parent
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onPressed: {
+            mediaPlayer.play()
+        }
+    }
+
+    Control {
+        Button {
+            text: mediaPlayer.playbackState == MediaPlayer.PlayingState ? "Pause" : "Play"
+            onClicked: {
+                if (mediaPlayer.playbackState == MediaPlayer.PlayingState) {
+                    mediaPlayer.pause();
+                } else {
+                    networkManager.play()
+                    mediaPlayer.play();
+                }
+            }
+        }
+    }
 
     Network {
         id: networkManager
