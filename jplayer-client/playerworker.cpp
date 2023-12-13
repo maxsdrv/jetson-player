@@ -58,7 +58,6 @@ void PlayerWorker::senderConnections()
     connect(this, &PlayerWorker::enqueueGetRequest, _playerSender, &PlayerSender::prepareGetRequest);
 
     connect(this, &PlayerWorker::urlUpdated, _playerSender, &PlayerSender::setUrl);
-
 }
 
 void PlayerWorker::receiverConnecions()

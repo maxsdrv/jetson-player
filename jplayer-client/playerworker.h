@@ -23,18 +23,40 @@ public:
     explicit PlayerWorker(QObject *parent = nullptr);
     ~PlayerWorker();
 
+    /**
+     * @brief setupTimers - setup timers
+     */
     void setupTimers();
+    /**
+     * @brief connectionTimerStop - stop connection timer
+     */
     void connectionTimerStop();
+    /**
+     * @brief setUrl - set url
+     * @param url - url
+     */
     void setUrl(QString url);
+    /**
+     * @brief play - play video from server
+     */
     void play();
+    /**
+     * @brief stop - stop video from server
+     */
     void stop();
 
 private:
+    /**
+     * @brief The MessageType enum - types of messages
+     */
     enum class MessageType {
         HEARTBEAT,
         PLAY,
         STOP
     };
+    /**
+     * @brief messageTypes - map of message types and endpoints
+      */
     QMap<MessageType, QString> messageTypes {
         {MessageType::HEARTBEAT, "/heartbeat"},
         {MessageType::PLAY, "/play"},
@@ -51,21 +73,44 @@ private:
     QString _serverUrl;
     QTimer* _connectionTimer;
 
-    void sendRequest(PlayerSender* requestData);
-
     void senderConnections();
     void receiverConnecions();
 
 public slots:
+    /**
+     * @brief checkConnection - check connection with server
+     */
     void checkConnection();
 
 private slots:
+    /**
+     * @brief processingErrors - processing errors from server
+     * @param error - error message
+     */
     void processingErrors(QString error);
+    /**
+     * @brief processingResponses - processing response from server
+     * @param response - type of response message
+     * @param message - message from server
+     */
     void processingResponses(QString response, QString message);
 
 signals:
+    /**
+     * @brief enqueuePostRequest - enqueue post request
+     * @param endpoint - endpoint
+     * @param data - data to send to server
+     */
     void enqueuePostRequest(QString endpoint, const QByteArray &data);
+    /**
+     * @brief enqueueGetRequest - enqueue get request
+     * @param endpoint - endpoint
+     */
     void enqueueGetRequest(QString endpoint);
+    /**
+     * @brief urlUpdated - url updated
+     * @param url - url
+     */
     void urlUpdated(QString url);
 };
 

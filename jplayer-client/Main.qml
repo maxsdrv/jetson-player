@@ -38,7 +38,9 @@ Window {
                     mediaPlayer.pause();
                 } else {
                     networkManager.play()
+                    console.log("FFmpeg server run.")
                     mediaPlayer.play();
+                    console.log("Media Player play.")
                 }
             }
         }
