@@ -31,8 +31,7 @@ qt_add_qml_module(appmedia-player
     VERSION 1.0
     QML_FILES Main.qml
     SOURCES
-    SOURCES
-    SOURCES
+    RESOURCES resource.qrc
 )
 
 set_target_properties(appmedia-player PROPERTIES

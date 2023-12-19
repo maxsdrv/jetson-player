@@ -93,6 +93,11 @@ void PlayerWorker::processingErrors(QString error)
 void PlayerWorker::processingResponses(QString response, QString message)
 {
     qDebug() << "Response: " << response << " " << message;
+
+    if (response == "play") {
+        emit streamPlayed();
+    }
+
     connectionTimerStop();
 }
 

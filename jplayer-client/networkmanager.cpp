@@ -8,6 +8,7 @@ NetworkManager::NetworkManager(QObject *parent)
 
     qDebug() << __func__;
     connect(this, &NetworkManager::urlChanged, _playerWorker, &PlayerWorker::checkConnection, Qt::QueuedConnection);
+    connect(_playerWorker, &PlayerWorker::streamPlayed, this, &NetworkManager::streamSuccessfullyPlayed, Qt::QueuedConnection);
     //connect(_playerWorker, &PlayerWorker::responseReceived, this, &NetworkManager::proceedResponse, Qt::QueuedConnection);
     //connect(_playerWorker, &PlayerWorker::badRequest, this, &NetworkManager::proceedErrors, Qt::QueuedConnection);
 }

@@ -15,7 +15,8 @@ Window {
 
     MediaPlayer {
         id: mediaPlayer
-        source: "rtp://localhost:5000"
+        source: "rtp://10.10.3.206:5000"
+        videoOutput: videoOutput
     }
 
     VideoOutput {
@@ -23,35 +24,62 @@ Window {
         anchors.fill: parent
     }
 
-    MouseArea {
-        anchors.fill: parent
-        onPressed: {
-            mediaPlayer.play()
-        }
-    }
+    Rectangle {
+        width: parent.width
+        height: 50
+        color: "white"
+        opacity: 2
+        anchors.bottom: parent.bottom
 
-    Control {
-        Button {
-            text: mediaPlayer.playbackState == MediaPlayer.PlayingState ? "Pause" : "Play"
-            onClicked: {
-                if (mediaPlayer.playbackState == MediaPlayer.PlayingState) {
-                    mediaPlayer.pause();
-                } else {
+        Row {
+            spacing: 10
+            anchors.centerIn: parent
+
+            Button {
+                icon.source: "qrc:/resource/play_02.png"
+                onClicked: {
                     networkManager.play()
-                    console.log("FFmpeg server run.")
-                    mediaPlayer.play();
-                    console.log("Media Player play.")
+                }
+            }
+
+            Button {
+                text: "Pause"
+                onClicked: {
+
+                }
+            }
+
+            Button {
+                text: "Stop"
+                onClicked: {
+
                 }
             }
         }
     }
 
+    // Control {
+    //     Button {
+    //         text: mediaPlayer.playbackState == MediaPlayer.PlayingState ? "Pause" : "Play"
+    //         onClicked: {
+    //             if (mediaPlayer.playbackState == MediaPlayer.PlayingState) {
+    //                 mediaPlayer.pause();
+
+    //             } else {
+    //                  networkManager.play()
+    //                  console.log("FFmpeg server run.")
+    //             }
+    //         }
+    //     }
+    // }
+
     Network {
         id: networkManager
         url: ipAddr
 
-        onResponseChanged: {
-            console.log("Response ...")
+        onStreamSuccessfullyPlayed: {
+            console.log("Gstreamer played")
+            mediaPlayer.play();
         }
     }
 
@@ -60,6 +88,5 @@ Window {
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         text: networkManager.response
-        //text: "Server response:"
     }
 }

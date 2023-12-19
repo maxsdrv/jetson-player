@@ -37,6 +37,7 @@ public:
 signals:
     void responseChanged();
     void urlChanged();
+    void streamSuccessfullyPlayed();
 
 private slots:
     void proceedResponse(const QString& response);

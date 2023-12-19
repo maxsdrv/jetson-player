@@ -112,6 +112,10 @@ signals:
      * @param url - url
      */
     void urlUpdated(QString url);
+    /**
+     * @brief streamPlayed - stream played
+     */
+    void streamPlayed();
 };
 
 #endif // PLAYERWORKER_H
