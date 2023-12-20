@@ -2,13 +2,13 @@
 #define NETWORKMANAGER_H
 
 #include <QObject>
-#include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QQmlApplicationEngine>
 
 QT_BEGIN_NAMESPACE
 
 class PlayerWorker;
+class QTimer;
 
 QT_END_NAMESPACE
 
@@ -22,10 +22,6 @@ public:
     explicit NetworkManager(QObject *parent = nullptr);
     ~NetworkManager();
 
-    Q_INVOKABLE void sendRequest(const QString& url);
-    Q_INVOKABLE void play();
-    Q_INVOKABLE void stop();
-
     QString response() const;
 
     QString url() const {
@@ -38,16 +34,21 @@ signals:
     void responseChanged();
     void urlChanged();
     void streamSuccessfullyPlayed();
+    void playRequested();
+    void stopRequested();
+    void pauseRequested();
 
 private slots:
     void proceedResponse(const QString& response);
     void proceedErrors(const QString& error);
+    void setupTimers();
 
 private:
-    QNetworkAccessManager* networkManager;
     QString m_response;
     QString _url;
-    PlayerWorker* _playerWorker;
+    QSharedPointer<PlayerWorker> _playerWorker;
+    QSharedPointer<QThread> _playerThread;
+    QTimer *_timer;
 };
 
 #endif // NETWORKMANAGER_H

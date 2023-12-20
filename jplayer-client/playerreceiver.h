@@ -8,7 +8,7 @@ class PlayerReceiver : public QObject
 {
     Q_OBJECT
 public:
-    explicit PlayerReceiver(QObject* parent = nullptr);
+    PlayerReceiver();
     ~PlayerReceiver();
 
 public slots:

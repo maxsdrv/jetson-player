@@ -6,7 +6,6 @@ PlayerSender::PlayerSender(QNetworkAccessManager *netManager, QObject* parent) :
     _networkManager{netManager}
 {
     connect(this, &PlayerSender::newRequestEnqueue, this, &PlayerSender::processQueue);
-
 }
 
 PlayerSender::~PlayerSender()

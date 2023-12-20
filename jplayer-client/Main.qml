@@ -28,7 +28,7 @@ Window {
         width: parent.width
         height: 50
         color: "white"
-        opacity: 2
+        opacity: 1
         anchors.bottom: parent.bottom
 
         Row {
@@ -36,27 +36,67 @@ Window {
             anchors.centerIn: parent
 
             Button {
-                icon.source: "qrc:/resource/play_02.png"
-                onClicked: {
-                    networkManager.play()
+                id: playButton
+                width: 50
+                height: 30
+                scale: 1.0
+
+                background: Rectangle {
+                    color: "transparent"
+                    radius: 10
                 }
-            }
+
+                contentItem: Image {
+                    source: "qrc:/resource/play_01.png"
+                    fillMode: Image.PreserveAspectFit
+                    anchors.fill: parent
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onPressed: {
+                        playButton.scale = 0.9
+                    }
+                    onReleased: {
+                        playButton.scale = 1.0
+                    }
+
+                    onClicked: {
+                        networkManager.playRequested()
+                    }
+                }
+
+                Behavior on scale {
+                    NumberAnimation {
+                        target: playButton
+                        duration: 100
+                    }
+                }
+
+            } // play button
 
             Button {
                 text: "Pause"
+                width: 50
+                height: 30
                 onClicked: {
 
                 }
-            }
+            } // pause button
 
             Button {
                 text: "Stop"
+                width: 50
+                height: 30
                 onClicked: {
 
                 }
-            }
-        }
-    }
+            } // stop button
+
+        } // row
+
+    } // control
 
     // Control {
     //     Button {

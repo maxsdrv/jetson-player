@@ -3,9 +3,8 @@
 #include "playerreceiver.h"
 #include "runner.h"
 
-PlayerReceiver::PlayerReceiver(QObject *parent) : QObject{parent}
+PlayerReceiver::PlayerReceiver()
 {
-
 }
 
 PlayerReceiver::~PlayerReceiver()

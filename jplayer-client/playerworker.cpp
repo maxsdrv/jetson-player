@@ -9,37 +9,20 @@
 #include "playerreceiver.h"
 #include "playersender.h"
 
-PlayerWorker::PlayerWorker(QObject *parent)
-    : QObject{parent},
-      _networkManager{new QNetworkAccessManager(this)},
-      _playerReceiver{new PlayerReceiver{this}},
-      _playerSender{new PlayerSender{_networkManager, this}},
-      _connectionTimer{new QTimer(this)}
+PlayerWorker::PlayerWorker()
+    :
+      _networkManager{new QNetworkAccessManager()},
+      _playerReceiver{new PlayerReceiver()},
+      _playerSender{new PlayerSender{_networkManager.get(), nullptr}}
 {
+
     senderConnections();
     receiverConnecions();
-
-    moveToThread(&_thread);
-    _thread.start();
 }
 
 PlayerWorker::~PlayerWorker()
 {
-    _thread.quit();
-    _thread.wait();
-
     qDebug() << __func__;
-}
-
-void PlayerWorker::setupTimers()
-{
-    connect(_connectionTimer, &QTimer::timeout, this, &PlayerWorker::checkConnection);
-    _connectionTimer->start(10000);
-}
-
-void PlayerWorker::connectionTimerStop()
-{
-    _connectionTimer->stop();
 }
 
 void PlayerWorker::setUrl(QString url)
@@ -53,18 +36,16 @@ void PlayerWorker::setUrl(QString url)
 
 void PlayerWorker::senderConnections()
 {
-    connect(this, &PlayerWorker::enqueuePostRequest, _playerSender, &PlayerSender::preparePostRequest);
-
-    connect(this, &PlayerWorker::enqueueGetRequest, _playerSender, &PlayerSender::prepareGetRequest);
-
-    connect(this, &PlayerWorker::urlUpdated, _playerSender, &PlayerSender::setUrl);
+    connect(this, &PlayerWorker::enqueuePostRequest, _playerSender.get(), &PlayerSender::preparePostRequest);
+    connect(this, &PlayerWorker::enqueueGetRequest, _playerSender.get(), &PlayerSender::prepareGetRequest);
+    connect(this, &PlayerWorker::urlUpdated, _playerSender.get(), &PlayerSender::setUrl);
 }
 
 void PlayerWorker::receiverConnecions()
 {
-    connect(_networkManager, &QNetworkAccessManager::finished, _playerReceiver, &PlayerReceiver::networkReply);
-    connect(_playerReceiver, &PlayerReceiver::badRequest, this, &PlayerWorker::processingErrors);
-    connect(_playerReceiver, &PlayerReceiver::responseReceived, this, &PlayerWorker::processingResponses);
+    connect(_networkManager.get(), &QNetworkAccessManager::finished, _playerReceiver.get(), &PlayerReceiver::networkReply);
+    connect(_playerReceiver.get(), &PlayerReceiver::badRequest, this, &PlayerWorker::processingErrors);
+    connect(_playerReceiver.get(), &PlayerReceiver::responseReceived, this, &PlayerWorker::processingResponses);
 }
 
 void PlayerWorker::checkConnection()
@@ -82,7 +63,12 @@ void PlayerWorker::play()
 
 void PlayerWorker::stop()
 {
+    emit enqueueGetRequest(messageTypes[MessageType::STOP]);
+}
 
+void PlayerWorker::pause()
+{
+    emit enqueueGetRequest(messageTypes[MessageType::PAUSE]);
 }
 
 void PlayerWorker::processingErrors(QString error)
@@ -94,11 +80,21 @@ void PlayerWorker::processingResponses(QString response, QString message)
 {
     qDebug() << "Response: " << response << " " << message;
 
+    if (response == "heartbeat") {
+        emit serverIsAlive();
+    }
+
     if (response == "play") {
         emit streamPlayed();
     }
 
-    connectionTimerStop();
+    if (response == "stop") {
+        emit streamStopped();
+    }
+
+    if (response == "pause") {
+        emit streamPaused();
+    }
 }
 
 
