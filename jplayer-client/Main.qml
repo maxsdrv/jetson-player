@@ -47,24 +47,16 @@ Window {
                 }
 
                 contentItem: Image {
-                    source: "qrc:/resource/play_01.png"
+                    source: "qrc:/resource/images/play_01.png"
                     fillMode: Image.PreserveAspectFit
                     anchors.fill: parent
                 }
 
                 MouseArea {
                     anchors.fill: parent
-
-                    onPressed: {
-                        playButton.scale = 0.9
-                    }
-                    onReleased: {
-                        playButton.scale = 1.0
-                    }
-
-                    onClicked: {
-                        networkManager.playRequested()
-                    }
+                    onPressed: { playButton.scale = 0.9 }
+                    onReleased: { playButton.scale = 1.0 }
+                    onClicked: { networkManager.playRequested() }
                 }
 
                 Behavior on scale {
@@ -77,26 +69,87 @@ Window {
             } // play button
 
             Button {
-                text: "Pause"
+                id: pauseButton
                 width: 50
                 height: 30
-                onClicked: {
 
+                background: Rectangle {
+                    color: "transparent"
+                    radius: 10
                 }
+                contentItem: Image {
+                    source: "qrc:/resource/images/pause01.png"
+                    fillMode: Image.PreserveAspectFit
+                    anchors.fill: parent
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onPressed: { pauseButton.scale = 0.9 }
+                    onReleased: { pauseButton.scale = 1.0 }
+                    onClicked: { networkManager.pauseRequested() }
+                }
+                Behavior on scale {
+                    NumberAnimation {
+                        target: pauseButton
+                        duration: 100
+                    }
+                }
+
             } // pause button
 
             Button {
-                text: "Stop"
+                id: stopBtn
                 width: 50
                 height: 30
-                onClicked: {
 
+                background: Rectangle {
+                    id: recImage
+                    anchors.fill: parent
+                    color: "transparent"
+                    radius: 5
+
+                    Image {
+                        id: stopBtnImage
+                        width: parent.width * 0.85
+                        height: parent.height * 0.85
+                        anchors.centerIn: recImage
+                        source: "qrc:/resource/images/stop01.png"
+                        visible: false
+                    }
+
+                    ShaderEffect {
+                        anchors.centerIn: recImage
+                        width: stopBtnImage.width
+                        height: stopBtnImage.height
+                        property variant source: stopBtnImage
+                        property color customColor: "white"
+                        property real rotation: 0
+                        property real customWidth: stopBtnImage.width
+                        property real customHeight: stopBtnImage.height
+                        fragmentShader: "resource/shaders/button_font.frag.qsb"
+                        vertexShader: "resource/shaders/button_direction.vert.qsb"
+                    }
+
+                } // background image
+
+                MouseArea {
+                    anchors.fill: parent
+                    onPressed: { stopBtn.scale = 0.9 }
+                    onReleased: { stopBtn.scale = 1.0 }
+                    onClicked: { networkManager.stopRequested() }
                 }
+                Behavior on scale {
+                    NumberAnimation {
+                        target: stopBtn
+                        duration: 100
+                    }
+                }
+
             } // stop button
 
         } // row
 
-    } // control
+    } // control panel
 
     // Control {
     //     Button {

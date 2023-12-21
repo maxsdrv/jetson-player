@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<NetworkManager>("network_manager", 1, 0, "Network");
 
-    const QUrl url(u"qrc:/media-player/Main.qml"_qs);
+    const QUrl url(u"qrc:/Main.qml"_qs);
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed,
         &app, []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);

@@ -1,6 +1,11 @@
 <RCC>
     <qresource prefix="/">
-        <file>resource/play02.png</file>
-        <file>resource/play_01.png</file>
+        <file>resource/images/pause01.png</file>
+        <file>resource/images/play02.png</file>
+        <file>resource/images/play_01.png</file>
+        <file>resource/images/stop01.png</file>
+        <file alias="resource/shaders/button_direction.vert.qsb">button_direction.vert.qsb</file>
+        <file alias="resource/shaders/button_font.frag.qsb">button_font.frag.qsb</file>
+        <file>Main.qml</file>
     </qresource>
 </RCC>

@@ -8,7 +8,11 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Quick ShaderTools)
+
+find_program(QSB_EXECUTABLE NAMES qsb)
+
+message(STATUS "QSB_EXECUTABLE: ${QSB_EXECUTABLE}")
 
 qt_standard_project_setup()
 
@@ -30,16 +34,21 @@ qt_add_executable(${PROJECT_NAME}
     ${SOURCES}
 )
 
-qt_add_qml_module(${PROJECT_NAME}
-    URI media-player
-    VERSION 1.0
-    QML_FILES Main.qml
-    SOURCES
-)
-
 qt_add_resources(${PROJECT_NAME} "${PROJECT_NAME}"
     PREFIX "/"
-    FILES resources.qrc
+    FILES
+        "Main.qml"
+        "resource/images/play_01.png"
+        "resource/images/play02.png"
+        "resource/images/stop01.png"
+        "resource/images/pause01.png"
+)
+
+qt6_add_shaders(${PROJECT_NAME} "${PROJECT_NAME}_shaders"
+    PREFIX "/"
+    FILES
+    "resource/shaders/button_direction.vert"
+    "resource/shaders/button_font.frag"
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -51,7 +60,9 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 target_link_libraries(${PROJECT_NAME}
-    PRIVATE Qt6::Quick
+    PRIVATE
+    Qt6::Quick
+    Qt6::ShaderTools
 )
 
 install(TARGETS ${PROJECT_NAME}
